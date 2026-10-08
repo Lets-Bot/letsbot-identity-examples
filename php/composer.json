@@ -1,0 +1,13 @@
+{
+    "name": "letsbot/identity-example-php",
+    "description": "Mint LetsBot In-App Chat identity tokens from a PHP backend.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "firebase/php-jwt": "^6.10 || ^7.0"
+    },
+    "scripts": {
+        "test": "php tests/run.php"
+    }
+}

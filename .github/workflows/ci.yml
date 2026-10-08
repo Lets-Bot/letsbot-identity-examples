@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: node } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm test
+
+  php:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: php } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with: { php-version: '8.3', tools: composer }
+      - run: composer install --no-interaction
+      - run: php tests/run.php
+
+  python:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: python } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -r requirements.txt
+      - run: python -m unittest -v
+
+  go:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: go } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.22' }
+      - run: go vet ./... && go test ./...
+
+  ruby:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: ruby } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: '3.3', bundler-cache: true, working-directory: ruby }
+      - run: bundle exec ruby test/identity_test.rb
+
+  dotnet:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: dotnet } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '10.0.x' }
+      - run: dotnet test LetsBot.IdentityExample.Tests
